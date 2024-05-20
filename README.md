@@ -45,19 +45,19 @@ REST 프레임워크는 다음을 필요로 합니다:
 `INSTALLED_APPS` 설정에 `'rest_framework'`를 추가하세요.
 
 ```python
-    INSTALLED_APPS = [
-        ...
-        'rest_framework',
-    ]
+INSTALLED_APPS = [
+    ...
+    'rest_framework',
+]
 ```
 
 브라우저 API를 사용하려는 경우 REST 프레임워크의 로그인 및 로그아웃 뷰도 추가하는 것이 좋습니다. 다음을 루트 `urls.py` 파일에 추가하세요.
 
 ```python
-    urlpatterns = [
-        ...
-        path('api-auth/', include('rest_framework.urls'))
-    ]
+urlpatterns = [
+    ...
+    path('api-auth/', include('rest_framework.urls'))
+]
 ```
 
 URL 경로는 원하는 대로 설정할 수 있습니다.
@@ -71,13 +71,13 @@ REST 프레임워크를 사용하여 간단한 모델 기반 API를 만드는 �
 REST 프레임워크 API의 모든 글로벌 설정은 `REST_FRAMEWORK`라는 단일 구성 딕셔너리에 저장됩니다. `settings.py` 모듈에 다음을 추가하세요.
 
 ```python
-    REST_FRAMEWORK = {
-        # Django의 표준 `django.contrib.auth` 권한을 사용하거나,
-        # 인증되지 않은 사용자에게 읽기 전용 액세스를 허용합니다.
-        'DEFAULT_PERMISSION_CLASSES': [
-            'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-        ]
-    }
+REST_FRAMEWORK = {
+    # Django의 표준 `django.contrib.auth` 권한을 사용하거나,
+    # 인증되지 않은 사용자에게 읽기 전용 액세스를 허용합니다.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
 ```
 
 `INSTALLED_APPS`에 `rest_framework`도 추가했는지 확인하세요.
@@ -86,31 +86,31 @@ REST 프레임워크 API의 모든 글로벌 설정은 `REST_FRAMEWORK`라는 �
 다음은 프로젝트의 루트 `urls.py` 모듈입니다:
 
 ```python
-    from django.urls import path, include
-    from django.contrib.auth.models import User
-    from rest_framework import routers, serializers, viewsets
+from django.urls import path, include
+from django.contrib.auth.models import User
+from rest_framework import routers, serializers, viewsets
 
-    # 직렬화는 API 표현을 정의합니다.
-    class UserSerializer(serializers.HyperlinkedModelSerializer):
-        class Meta:
-            model = User
-            fields = ['url', 'username', 'email', 'is_staff']
+# 직렬화는 API 표현을 정의합니다.
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = User
+        fields = ['url', 'username', 'email', 'is_staff']
 
-    # ViewSets는 뷰 동작을 정의합니다.
-    class UserViewSet(viewsets.ModelViewSet):
-        queryset = User.objects.all()
-        serializer_class = UserSerializer
+# ViewSets는 뷰 동작을 정의합니다.
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
-    # 라우터는 URL 구성을 자동으로 결정하는 쉬운 방법을 제공합니다.
-    router = routers.DefaultRouter()
-    router.register(r'users', UserViewSet)
+# 라우터는 URL 구성을 자동으로 결정하는 쉬운 방법을 제공합니다.
+router = routers.DefaultRouter()
+router.register(r'users', UserViewSet)
 
-    # 자동 URL 라우팅을 사용하여 API를 연결합니다.
-    # 또한, 브라우저 API를 위한 로그인 URL을 포함합니다.
-    urlpatterns = [
-        path('', include(router.urls)),
-        path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
-    ]
+# 자동 URL 라우팅을 사용하여 API를 연결합니다.
+# 또한, 브라우저 API를 위한 로그인 URL을 포함합니다.
+urlpatterns = [
+    path('', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+]
 ```
 
 이제 [http://127.0.0.1:8000/](http://127.0.0.1:8000/)에서 브라우저에서 API를 열고 새로운 'users' API를 볼 수 있습니다. 오른쪽 상단의 로그인 컨트롤을 사용하면 시스템에서 사용자를 추가, 생성 및 삭제할 수도 있습니다.
